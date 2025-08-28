@@ -1,5 +1,36 @@
-import { getToday } from "../utils/helpers";
+/* eslint-disable no-unused-vars */
+// import { getToday } from "../utils/helpers";
+import { PAGE_SIZE } from "../utils/constants";
 import supabase from "./supabase";
+
+export async function getBookings({ filter, sortBy, page }) {
+  let query = supabase
+    .from("bookings")
+    .select("*,  cabins(name), guests(fullName, email)", { count: "exact" });
+
+  // FILTER
+  if (filter) query = query[filter.method || "eq"](filter.field, filter.value);
+
+  // SORT
+  if (sortBy)
+    query = query.order(sortBy.field, {
+      ascending: sortBy.direction === "asc",
+    });
+
+  // Pagination
+  if (page) {
+    const from = (page - 1) * (PAGE_SIZE - 1);
+    const to = from + PAGE_SIZE - 1;
+    query = query.range(from, to);
+  }
+  const { data, error, count } = await query;
+  if (error) {
+    console.log(error);
+    throw new Error("Bookings could not be loaded");
+  }
+
+  return { data, count };
+}
 
 export async function getBooking(id) {
   const { data, error } = await supabase
@@ -22,7 +53,7 @@ export async function getBookingsAfterDate(date) {
     .from("bookings")
     .select("created_at, totalPrice, extrasPrice")
     .gte("created_at", date)
-    .lte("created_at", getToday({ end: true }));
+    .lte("created_at");
 
   if (error) {
     console.error(error);
@@ -39,7 +70,7 @@ export async function getStaysAfterDate(date) {
     // .select('*')
     .select("*, guests(fullName)")
     .gte("startDate", date)
-    .lte("startDate", getToday());
+    .lte("startDate");
 
   if (error) {
     console.error(error);
@@ -55,7 +86,7 @@ export async function getStaysTodayActivity() {
     .from("bookings")
     .select("*, guests(fullName, nationality, countryFlag)")
     .or(
-      `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.checked-in,endDate.eq.${getToday()})`
+      `and(status.eq.unconfirmed,startDate.eq,and(status.eq.checked-in,endDate.eq)`
     )
     .order("created_at");
 

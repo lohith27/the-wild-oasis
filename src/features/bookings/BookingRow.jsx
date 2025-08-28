@@ -1,11 +1,13 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import { format, isToday } from "date-fns";
 
 import Tag from "../../ui/Tag";
 import Table from "../../ui/Table";
 
-import { formatCurrency } from "../../utils/helpers";
-import { formatDistanceFromNow } from "../../utils/helpers";
+// import { formatCurrency } from "../../utils/helpers";
+// import { formatDistanceFromNow } from "../../utils/helpers";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -45,6 +47,7 @@ function BookingRow({
     totalPrice,
     status,
     guests: { fullName: guestName, email },
+    // eslint-disable-next-line react/prop-types
     cabins: { name: cabinName },
   },
 }) {
@@ -64,21 +67,12 @@ function BookingRow({
       </Stacked>
 
       <Stacked>
-        <span>
-          {isToday(new Date(startDate))
-            ? "Today"
-            : formatDistanceFromNow(startDate)}{" "}
-          &rarr; {numNights} night stay
-        </span>
-        <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
-          {format(new Date(endDate), "MMM dd yyyy")}
-        </span>
+        {startDate} - {endDate}
       </Stacked>
 
       <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
 
-      <Amount>{formatCurrency(totalPrice)}</Amount>
+      <Amount>{totalPrice}</Amount>
     </Table.Row>
   );
 }

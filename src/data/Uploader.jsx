@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { isFuture, isPast, isToday } from "date-fns";
+// import { isFuture, isPast, isToday } from "date-fns";
 import supabase from "../services/supabase";
 import Button from "../ui/Button";
-import { subtractDates } from "../utils/helpers";
+// import { subtractDates } from "../utils/helpers";
 
 import { bookings } from "./data-bookings";
 import { cabins } from "./data-cabins";
@@ -56,7 +56,8 @@ async function createBookings() {
   const finalBookings = bookings.map((booking) => {
     // Here relying on the order of cabins, as they don't have and ID yet
     const cabin = cabins.at(booking.cabinId - 1);
-    const numNights = subtractDates(booking.endDate, booking.startDate);
+    // const numNights = new Date(booking.endDate) - new Date(booking.startDate);
+    const numNights = 2;
     const cabinPrice = numNights * (cabin.regularPrice - cabin.discount);
     const extrasPrice = booking.hasBreakfast
       ? numNights * 15 * booking.numGuests
@@ -64,23 +65,23 @@ async function createBookings() {
     const totalPrice = cabinPrice + extrasPrice;
 
     let status;
-    if (
-      isPast(new Date(booking.endDate)) &&
-      !isToday(new Date(booking.endDate))
-    )
-      status = "checked-out";
-    if (
-      isFuture(new Date(booking.startDate)) ||
-      isToday(new Date(booking.startDate))
-    )
-      status = "unconfirmed";
-    if (
-      (isFuture(new Date(booking.endDate)) ||
-        isToday(new Date(booking.endDate))) &&
-      isPast(new Date(booking.startDate)) &&
-      !isToday(new Date(booking.startDate))
-    )
-      status = "checked-in";
+    // if (
+    //   isPast(new Date(booking.endDate)) &&
+    //   !isToday(new Date(booking.endDate))
+    // )
+    //   status = "checked-out";
+    // if (
+    //   isFuture(new Date(booking.startDate)) ||
+    //   isToday(new Date(booking.startDate))
+    // )
+    //   status = "unconfirmed";
+    // if (
+    //   (isFuture(new Date(booking.endDate)) ||
+    //     isToday(new Date(booking.endDate))) &&
+    //   isPast(new Date(booking.startDate)) &&
+    //   !isToday(new Date(booking.startDate))
+    // )
+    status = "checked-in";
 
     return {
       ...booking,
