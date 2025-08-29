@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { getCabins } from "../../services/apiCabins";
@@ -29,7 +28,7 @@ const TableHeader = styled.header`
   padding: 1.6rem 2.4rem;
 `;
 
-export function CabinTable() {
+function CabinTable() {
   const {
     isLoading,
     data: cabins,
@@ -40,6 +39,7 @@ export function CabinTable() {
   });
 
   if (isLoading) return <Spinner />;
+
   return (
     <Table role="table">
       <TableHeader role="row">

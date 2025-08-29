@@ -1,12 +1,11 @@
-/* eslint-disable no-unused-vars */
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import {
-  HiOutlineHome,
   HiOutlineCalendarDays,
+  HiOutlineCog6Tooth,
+  HiOutlineHome,
   HiOutlineHomeModern,
   HiOutlineUsers,
-  HiOutlineCog6Tooth,
 } from "react-icons/hi2";
 
 const NavList = styled.ul`
@@ -54,7 +53,7 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-export function MainNav() {
+function MainNav() {
   return (
     <nav>
       <NavList>

@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
 import styled from "styled-components";
+
 import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
 import { useCabins } from "./useCabins";
@@ -28,10 +28,11 @@ const TableHeader = styled.header`
   padding: 1.6rem 2.4rem;
 `;
 
-export function CabinTable() {
-  const { isLoading, cabins, error } = useCabins();
+function CabinTable() {
+  const { isLoading, cabins } = useCabins();
 
   if (isLoading) return <Spinner />;
+
   return (
     <Table role="table">
       <TableHeader role="row">

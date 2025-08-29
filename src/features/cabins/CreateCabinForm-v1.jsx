@@ -1,36 +1,40 @@
-/* eslint-disable no-unused-vars */
-import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createEditCabin } from "../../services/apiCabins";
+import { toast } from "react-hot-toast";
+
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
-import toast from "react-hot-toast";
 import FormRow from "../../ui/FormRow";
+
+import { useForm } from "react-hook-form";
+import { createCabin } from "../../services/apiCabins";
 
 function CreateCabinForm() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
+
   const queryClient = useQueryClient();
+
   const { mutate, isLoading: isCreating } = useMutation({
-    mutationFn: createEditCabin,
+    mutationFn: createCabin,
     onSuccess: () => {
-      toast.success("Successfully added a cabin");
-      queryClient.invalidateQueries({
-        queryKey: ["cabins"],
-      });
+      toast.success("New cabin successfully created");
+      queryClient.invalidateQueries({ queryKey: ["cabins"] });
       reset();
     },
     onError: (err) => toast.error(err.message),
   });
+
   function onSubmit(data) {
     mutate({ ...data, image: data.image[0] });
   }
+
   function onError(errors) {
-    console.log(errors);
+    // console.log(errors);
   }
+
   return (
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <FormRow label="Cabin name" error={errors?.name?.message}>
@@ -38,7 +42,9 @@ function CreateCabinForm() {
           type="text"
           id="name"
           disabled={isCreating}
-          {...register("name", { required: "This field is required" })}
+          {...register("name", {
+            required: "This field is required",
+          })}
         />
       </FormRow>
 
@@ -49,7 +55,10 @@ function CreateCabinForm() {
           disabled={isCreating}
           {...register("maxCapacity", {
             required: "This field is required",
-            min: { value: 1, message: "Capacity should atleast be 1" },
+            min: {
+              value: 1,
+              message: "Capacity should be at least 1",
+            },
           })}
         />
       </FormRow>
@@ -59,7 +68,13 @@ function CreateCabinForm() {
           type="number"
           id="regularPrice"
           disabled={isCreating}
-          {...register("regularPrice", { required: "This field is required" })}
+          {...register("regularPrice", {
+            required: "This field is required",
+            min: {
+              value: 1,
+              message: "Capacity should be at least 1",
+            },
+          })}
         />
       </FormRow>
 
@@ -72,14 +87,15 @@ function CreateCabinForm() {
           {...register("discount", {
             required: "This field is required",
             validate: (value) =>
-              value <= +getValues().regularPrice ||
-              "Discount should be less than the regular price",
+              value <= getValues().regularPrice ||
+              "Discount should be less than regular price",
           })}
         />
       </FormRow>
 
       <FormRow
         label="Description for website"
+        disabled={isCreating}
         error={errors?.description?.message}
       >
         <Textarea
@@ -87,7 +103,9 @@ function CreateCabinForm() {
           id="description"
           defaultValue=""
           disabled={isCreating}
-          {...register("description", { required: "This field is required" })}
+          {...register("description", {
+            required: "This field is required",
+          })}
         />
       </FormRow>
 
@@ -95,8 +113,9 @@ function CreateCabinForm() {
         <FileInput
           id="image"
           accept="image/*"
-          disabled={isCreating}
-          {...register("image", { required: "This field is required" })}
+          {...register("image", {
+            required: "This field is required",
+          })}
         />
       </FormRow>
 
@@ -105,7 +124,7 @@ function CreateCabinForm() {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isCreating}>Edit cabin</Button>
+        <Button disabled={isCreating}>Add cabin</Button>
       </FormRow>
     </Form>
   );

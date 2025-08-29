@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import styled from "styled-components";
 import Button from "./Button";
 import Heading from "./Heading";
@@ -33,13 +31,13 @@ function ConfirmDelete({ resourceName, onConfirm, disabled, onCloseModal }) {
 
       <div>
         <Button
-          onClick={onCloseModal}
           variation="secondary"
           disabled={disabled}
+          onClick={onCloseModal}
         >
           Cancel
         </Button>
-        <Button onClick={onConfirm} variation="danger" disabled={disabled}>
+        <Button variation="danger" disabled={disabled} onClick={onConfirm}>
           Delete
         </Button>
       </div>
